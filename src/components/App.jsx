@@ -1,5 +1,7 @@
 import React from 'react';
+import Section from "./Section/Section";
 const { Component } = require('react');
+
 class App extends Component {
   state = {
     good: 0,
@@ -18,7 +20,7 @@ class App extends Component {
           color: '#010101'
         }}
       >
-        React homework template!
+        <Section title={'Please leave feedback'}/>
       </div>
     );
   }
