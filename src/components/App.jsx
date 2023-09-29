@@ -1,6 +1,9 @@
 import React from 'react';
-import Section from "./Section/Section";
-import FeedbackOptions from "./FeedbackOptions/FeedbackOptions";
+import Section from './Section/Section';
+import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
+import Statistics from './Statistics/Statistics';
+import Notification from './Notification/Notification';
+
 const { Component } = require('react');
 
 class App extends Component {
@@ -8,6 +11,14 @@ class App extends Component {
     good: 0,
     neutral: 0,
     bad: 0,
+  };
+
+  countTotalFeedback = () => {
+    return this.state.bad + this.state.neutral + this.state.good;
+  };
+  countPositiveFeedbackPercentage = () => {
+    let divide = this.countTotalFeedback() <= 0 ? 1 : this.countTotalFeedback();
+    return Math.round((this.state.good * 100) / divide);
   };
 
   vote = event => {
@@ -26,22 +37,28 @@ class App extends Component {
         console.log(id + ' param is not in the state');
     }
   };
-
   render() {
+    let total = this.countTotalFeedback();
+    let countPositive = this.countPositiveFeedbackPercentage();
     return (
-      <div
-        style={{
-          width:'400px',
-          marginLeft:"auto",
-          marginRight:"auto",
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <Section title={'Please leave feedback'}/>
-        <FeedbackOptions option={Object.keys(this.state)} vote={this.vote} />
+      <div style={{ padding: '16px' }}>
+        <Section title={'Please leave feedback'}>
+          <FeedbackOptions option={Object.keys(this.state)} vote={this.vote} />
+          {total > 0 ? (
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={total}
+              countPositive={countPositive}
+            />
+          ) : (
+            <Notification message="There is no feedback" />
+          )}
+        </Section>
       </div>
     );
   }
 }
+
 export default App;
